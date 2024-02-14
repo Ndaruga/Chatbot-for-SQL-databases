@@ -1,6 +1,9 @@
 import vanna as vn
 import streamlit as st
 import time
+import pandas as pd
+import pyodbc
+import psycopg2
 from streamlit_option_menu import option_menu
 
 
@@ -61,40 +64,41 @@ if selected == "MySQL":
         # Check the connection status
         query_database()
 
+def run_sql_for_DB(sql: str) -> pd.DataFrame:
+    df = pd.read_sql(sql, con_database)
+    return df
 
 if selected == "SQL Server":
     st.subheader('SQL Server database')
+
     Db_Host, DBpassword, DBuser, Db_name = conn_params()
-    # Add a button to connect to the database
+
     connect = st.button("Connect", key="connect")
 
     # Display a message when the button is clicked
     if connect:
         st.write(f"Connecting to {Db_Host} as {DBuser}...")
-        vn.connect_to_postgres(host=Db_Host, dbname=Db_name, password=DBpassword, user=DBuser)
+        con_database = pyodbc.connect("DRIVER={ODBC Driver 18 for SQL Server}; SERVER={Db_Host}; DATABASE={Db_name};USER={DBuser};PASSWORD={DBpassword}")
+        vn.run_sql = run_sql_for_DB
         # Check the connection status
         query_database()
 
 
 if selected == "PostgreSQL":
-    st.subheader('PostgerSQL database')
+    st.subheader('PostgreSQL database')
     Db_Host, DBpassword, DBuser, Db_name = conn_params()
     # Add a button to connect to the database
     connect = st.button("Connect", key="connect")
 
-    # Display a message when the button is clicked
     if connect:
-        st.write(f"Connecting to {Db_Host} as {DBuser}...")
-        vn.connect_to_postgres(host=Db_Host, dbname=Db_name, password=DBpassword, user=DBuser)
-        # Check the connection status
-        query_database()
+        # st.write(f"Connecting to {Db_Host} as {DBuser}...")
 
-
-# Hostname: hh-pgsql-public.ebi.ac.uk
-# Port: 5432
-# Database: pfmegrnargs
-# User: reader
-# Password: NWDMCE5xdipIjRrp
+        if True:    # Check the connection status
+            vn.connect_to_postgres(host=Db_Host, dbname=Db_name, password=DBpassword, user=DBuser, port=5432)
+            st.success("Connection is successful!")
+            query_database()
+        else:
+            st.error(f"Connection to {Db_name} failed!!")
 
 
 
