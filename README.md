@@ -29,6 +29,6 @@ Together, they can help to build a chatbot for your SQL database.
 
 - Run the code below to execute
  ```
-  streamlit run sql-chat.py
+  streamlit run app.py
   ```
 - Deploy your app to Streamlit Cloud or your preferred platform
