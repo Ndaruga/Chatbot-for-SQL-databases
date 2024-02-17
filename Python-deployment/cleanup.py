@@ -12,5 +12,5 @@ ALB = boto3.client('elb')
 
 # Release Elastic Ip address to Ip pool (Delete)
 releaseIpAdd = ec2.release_address(
-    AllocationId= #read from text file
+    AllocationId=None #read from text file
 )
