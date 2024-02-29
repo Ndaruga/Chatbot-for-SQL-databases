@@ -1,2 +1,5 @@
+__pycache__
 virtual
 tempdb.sqlite
+cleanup.py
+test.py
