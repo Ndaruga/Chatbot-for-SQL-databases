@@ -12,23 +12,18 @@ https://github.com/Ndaruga/Build-a-Chatbot-for-an-SQL-database-with-Streamlit-an
 ## Local Execution
 Streamlit is a Python library that allows you to create interactive Python web applications with minimal code. Vanna is a Python package that uses AI to generate SQL queries from natural language questions. 
 
-Together, they can help to build a chatbot for your SQL database.
+Together, they can help to build a chatbot for your SQL database with the following steps.
+  1. Clone the repository
+  2. Install all requirements using
+    ```
+     pip install -r requirements.txt
+    ```
+  3. Get a **Vanna API key** from [here](https://vanna.ai/)
+  4. For testing purposes, replace the `vanna_api_key` variable in line 13 of the `app.py` with the **vanna api key**.
+      > However, during deployment, ensure you get rid of the new line since pushing sensitive data to GitHub or deployment platforms is not recommended.
 
-### To build a chatbot for your SQL database with Streamlit and Vanna, you will need to:
-- Clone the repository
-- Install Streamlit and Vanna using
-  ```
-  pip install streamlit vanna
-  ```
-- Get a **Vanna API key** from [here](https://vanna.ai/)
-- For testing purposes, comment line 4 of the `sql-chat.py` with the following code `vn.set_api_key(st.secrets["vanna_api_key"])` and replace it with
-  ```
-  vn.set_api_key(<api key here>)
-  ```
-  However, during deployment, ensure you get rid of the new line since pushing sensitive data to GitHub or deployment platforms is not recommended.
-
-- Run the code below to execute
- ```
-  streamlit run app.py
-  ```
-- Deploy your app to Streamlit Cloud or your preferred platform
+  5. Run the code below to execute
+     ```
+      streamlit run app.py
+      ```
+  6. Deploy your app to Streamlit Cloud or your preferred platform
