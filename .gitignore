@@ -3,3 +3,4 @@ virtual
 tempdb.sqlite
 cleanup.py
 test.py
+Chinook.sqlite

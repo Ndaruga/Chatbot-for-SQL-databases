@@ -5,6 +5,7 @@ import pandas as pd
 import pyodbc
 import psycopg2
 from streamlit_option_menu import option_menu
+from vanna.remote import VannaDefault
 
 
 def conn_params():
@@ -32,9 +33,9 @@ def query_database():
         st.button("Ask another question", on_click=lambda:st.session_state.clear())
 
 
-
-vn.set_api_key(st.secrets["vanna_api_key"])
-vn.set_model('chinook')
+vanna_api_key = st.secrets["vanna_api_key"]
+vanna_model_name='chinook'
+vn = VannaDefault(model=vanna_model_name, api_key=vanna_api_key)
 
 st.title("Welcome to your :blue[SQL Chatbot]")
 
