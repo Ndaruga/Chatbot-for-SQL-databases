@@ -8,6 +8,15 @@ from streamlit_option_menu import option_menu
 from vanna.remote import VannaDefault
 
 
+
+# Vanna AI 
+vanna_api_key = st.secrets["vanna_api_key"]
+vanna_model_name='chinook'
+vn = VannaDefault(model=vanna_model_name, api_key=vanna_api_key)
+
+st.title("Welcome to your :blue[SQL Chatbot]")
+
+
 def conn_params():
     Db_Host = st.text_input("Hostname", placeholder="localhost")
     Db_name = st.text_input("Enter Database Name", placeholder= "DataBase name")
@@ -31,13 +40,6 @@ def query_database():
         st.plotly_chart(fig, use_container_width=True)
 
         st.button("Ask another question", on_click=lambda:st.session_state.clear())
-
-
-vanna_api_key = st.secrets["vanna_api_key"]
-vanna_model_name='chinook'
-vn = VannaDefault(model=vanna_model_name, api_key=vanna_api_key)
-
-st.title("Welcome to your :blue[SQL Chatbot]")
 
 with st.sidebar:
     selected = option_menu(
