@@ -10,7 +10,8 @@ from vanna.remote import VannaDefault
 
 
 # Vanna AI 
-vanna_api_key = st.secrets["vanna_api_key"]
+vanna_api_key = "e46645520a8f4b8d993354a9dafc956f"
+# vanna_api_key = st.secrets["vanna_api_key"]
 vanna_model_name='chinook'
 vn = VannaDefault(model=vanna_model_name, api_key=vanna_api_key)
 

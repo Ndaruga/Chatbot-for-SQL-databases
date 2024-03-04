@@ -1,5 +1,5 @@
 # Use the official Python image as the base image
-FROM python:3.11
+FROM python:3.10
 
 # Set the working directory in the container
 WORKDIR /app
@@ -7,13 +7,11 @@ WORKDIR /app
 # Copy the requirements.txt file to the container
 COPY requirements.txt .
 
-RUN apt-get update && apt-get install -y git
-
 # Install the dependencies using pip
 
 RUN pip install -r requirements.txt
 
-# Copy the rest of the files to the container
+# Copy the rest of the files to the container 
 COPY . .
 
 # Expose the port that streamlit uses
