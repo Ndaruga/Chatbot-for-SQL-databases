@@ -2,12 +2,18 @@ import boto3
 import os
 import json
 
+
+REGION_NAME="us-west-2"
 os.environ['AWS_PROFILE'] = "Francis"
-os.environ['AWS_DEFAULT_REGION'] = "us-west-2"
+os.environ['AWS_DEFAULT_REGION'] = REGION_NAME
 
 eb_env = boto3.client('elasticbeanstalk')
 ec2 = boto3.client('ec2')
 ALB = boto3.client('elbv2')
+s3=boto3.client('s3')
+
+# deploy code to s3 bucket
+bucket_name=f"elasticbeanstalk-{REGION_NAME}-339712738219"
 
 app_name='docker-no-alb'
 
@@ -135,6 +141,17 @@ try:
 except Exception as e:
 	print("Application exists")
 # print(app)
+
+# Create an application version
+version_label='V1'
+eb_version = eb_env.create_application_version(
+	ApplicationName=app_name,
+	AutoCreateApplication=True,
+	VersionLabel=version_label,
+	SourceBundle={
+		'S'
+	}
+)
 
 # Create environment
 env = eb_env.create_environment(
