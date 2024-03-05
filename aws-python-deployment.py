@@ -2,10 +2,9 @@ import boto3
 import os
 import json
 import time
-import webbrowser
 
 
-REGION_NAME="us-west-2"
+REGION_NAME=input("Enter Region Name: ")
 os.environ['AWS_PROFILE'] = "Francis"
 os.environ['AWS_DEFAULT_REGION'] = REGION_NAME
 
@@ -14,12 +13,20 @@ ec2 = boto3.client('ec2')
 ALB = boto3.client('elbv2')
 s3=boto3.client('s3')
 
+sts= boto3.client('sts')
+AWS_ACCOUNT_ID = sts.get_caller_identity()["Account"]
+
+# Get availability Zones
+a_zones=ec2.describe_availability_zones()
+az_list = [az["ZoneName"] for az in a_zones["AvailabilityZones"]]
+print(f"Availability Zones: {az_list}")
+
 
 # deploy code to s3 bucket
-bucket_name=f"elasticbeanstalk-{REGION_NAME}-339712738219"
+bucket_name=f"elasticbeanstalk-{REGION_NAME}-{AWS_ACCOUNT_ID}"
 
-app_name='please'
-version_label="docker version 1"
+app_name=input("Enter ElasticBeanstalk Application Name: ")
+version_label=input("Enter a unique source code Version label: ")
 environment_name=f"{app_name}-env"
 
 # Create a VPC with a specified CIDR block
@@ -56,7 +63,7 @@ ec2.create_route(
 subnets={}
 
 for i in range(1,5):
-	az = "us-west-2a" if i % 2 == 1 else "us-west-2b"
+	az = az_list[0] if i % 2 == 1 else az_list[1]
 	subnet = ec2.create_subnet(VpcId=vpc['Vpc']['VpcId'], CidrBlock=f'10.0.{i}.0/24', AvailabilityZone=az, DryRun=False)
 	subnet_id=subnet['Subnet']['SubnetId']
 
@@ -176,6 +183,21 @@ env = eb_env.create_environment(
 			'Namespace': 'aws:elasticbeanstalk:environment',
 			'OptionName': 'EnvironmentType',
 			'Value': 'SingleInstance'
+		},
+		{
+			'Namespace': 'aws:autoscaling:launchconfiguration',
+			'OptionName': 'InstanceType',
+			'Value': 'm5.large'
+		},
+		{
+			'Namespace': 'aws:autoscaling:launchconfiguration',
+			'OptionName': 'RootVolumeType',
+			'Value': 'gp2'
+		},
+		{
+			'Namespace': 'aws:autoscaling:launchconfiguration',
+			'OptionName': 'RootVolumeSize',
+			'Value': '40'
 		}
 
 	]
@@ -216,12 +238,11 @@ def check_environment_status(environment_name, max_wait_minutes=15):
 			# update the new environment with custom code
 			eb_env.update_environment(
 				EnvironmentName=environment_name,
-				VersionLabel=version_label
+				VersionLabel=version_label,
 			)
-			time.sleep(200)
+			time.sleep(240)
 			print(f"Environment '{environment_name}' has been created successfully.")
-			print(f"Opening  URL: {domain_url}")
-			webbrowser.open(domain_url)
+			print(f"Open the URL below: \n{domain_url}")
 			break
 
 		elapsed_time = time.time() - start_time
@@ -232,5 +253,5 @@ def check_environment_status(environment_name, max_wait_minutes=15):
 		print(f"Waiting for environment '{environment_name}' to be ready. Elapsed time: {int(elapsed_time)} seconds.")
 		time.sleep(30)  # Wait for 30 sec before checking again
 
-# Replace 'testint-env' with your actual environment name
+
 check_environment_status(environment_name=environment_name, max_wait_minutes=20)
