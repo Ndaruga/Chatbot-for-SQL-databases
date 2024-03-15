@@ -1,5 +1,5 @@
 # Build-a-Chatbot-for-an-SQL-database-with-Streamlit-and-Vanna
-Building a chatbot for an SQL database with Streamlit and Vanna is a fun and easy way to interact with your data using natural language
+Building a chatbot for an SQL database with Streamlit and Vanna is a fun and easy way to interact with your Database using natural language
 
 
 https://github.com/Ndaruga/Build-a-Chatbot-for-an-SQL-database-with-Streamlit-and-Vanna/assets/68260816/d5726d65-bcc7-4376-bece-026bdcc52708
