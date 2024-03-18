@@ -16,6 +16,12 @@ vn = VannaDefault(model=vanna_model_name, api_key=vanna_api_key)
 
 st.title("Welcome to your :blue[SQL Chatbot]")
 
+if 'clicked' not in st.session_state:
+    st.session_state.clicked = False
+
+def click_button():
+    st.session_state.clicked = True
+
 
 def conn_params():
     Db_Host = st.text_input("Hostname", placeholder="localhost")
@@ -90,18 +96,20 @@ if selected == "SQL Server":
 if selected == "PostgreSQL":
     st.subheader('PostgreSQL database')
     Db_Host, DBpassword, DBuser, Db_name = conn_params()
+
     # Add a button to connect to the database
-    connect = st.button("Connect", key="connect")
+    st.button("Connect", on_click=click_button)
 
-    if connect:
-        # st.write(f"Connecting to {Db_Host} as {DBuser}...")
+    if st.session_state.clicked:
+        st.write(f"Connecting to {Db_Host} as {DBuser}...")
 
-        if True:    # Check the connection status
-            vn.connect_to_postgres(host=Db_Host, dbname=Db_name, password=DBpassword, user=DBuser, port=5432)
-            st.success("Connection is successful!")
-            query_database()
-        else:
-            st.error(f"Connection to {Db_name} failed!!")
+        # if True:    # Check the connection status
+        vn.connect_to_postgres(host=Db_Host, dbname=Db_name, password=DBpassword, user=DBuser, port=5432)
+        st.success("Connection is successful!")
+        
+        query_database()
+    else:
+        st.error(f"Connection to {Db_name} failed!!")
 
 
 
