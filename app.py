@@ -96,7 +96,7 @@ if selected == "SQL Server":
 
 if selected == "PostgreSQL":
     st.subheader('PostgreSQL database')
-    server_host, server_port, password, DB_username, database_name = conn_params()
+    server_host, password, DB_username, database_name, server_port = conn_params()
 
     # Add a button to connect to the database
     st.button("Connect", on_click=click_button)
