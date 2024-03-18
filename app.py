@@ -24,12 +24,13 @@ def click_button():
 
 
 def conn_params():
-    Db_Host = st.text_input("Hostname", placeholder="localhost")
-    Db_name = st.text_input("Enter Database Name", placeholder= "DataBase name")
-    DBuser = st.text_input("Enter username", placeholder= "Username")
-    DBpassword = st.text_input("Enter Password", placeholder= "Password")
+    server_host = st.text_input("Hostname", placeholder="localhost")
+    server_port = st.number_input("Port", min_value=0, max_value = 65535, placeholder="1234")
+    database_name = st.text_input("Enter Database Name", placeholder= "DataBase name")
+    DB_username = st.text_input("Enter username", placeholder= "Username")
+    password = st.text_input("Enter Password", type= "Password")
 
-    return Db_Host, DBpassword, DBuser, Db_name
+    return server_host, DBpassword, DB_username, database_name, server_port
 
 
 def query_database():
@@ -62,14 +63,14 @@ if selected == "Demo Database":
         
 if selected == "MySQL":
     st.subheader('MySQL database')
-    Db_Host, DBpassword, DBuser, Db_name = conn_params()
+    server_host, DBpassword, DB_username, database_name = conn_params()
     # Add a button to connect to the database
     connect = st.button("Connect", key="connect")
 
     # Display a message when the button is clicked
     if connect:
-        st.write(f"Connecting to {Db_Host} as {DBuser}...")
-        vn.connect_to_postgres(host=Db_Host, dbname=Db_name, password=DBpassword, user=DBuser)
+        st.write(f"Connecting to {server_host} as {DB_username}...")
+        vn.connect_to_postgres(host=server_host, dbname=database_name, password=DBpassword, user=DB_username)
         # Check the connection status
         query_database()
 
@@ -80,14 +81,14 @@ def run_sql_for_DB(sql: str) -> pd.DataFrame:
 if selected == "SQL Server":
     st.subheader('SQL Server database')
 
-    Db_Host, DBpassword, DBuser, Db_name = conn_params()
+    server_host, DBpassword, DB_username, database_name = conn_params()
 
     connect = st.button("Connect", key="connect")
 
     # Display a message when the button is clicked
     if connect:
-        st.write(f"Connecting to {Db_Host} as {DBuser}...")
-        con_database = pyodbc.connect("DRIVER={ODBC Driver 18 for SQL Server}; SERVER={Db_Host}; DATABASE={Db_name};USER={DBuser};PASSWORD={DBpassword}")
+        st.write(f"Connecting to {server_host} as {DB_username}...")
+        con_database = pyodbc.connect("DRIVER={ODBC Driver 18 for SQL Server}; SERVER={server_host}; DATABASE={database_name};USER={DB_username};PASSWORD={DBpassword}")
         vn.run_sql = run_sql_for_DB
         # Check the connection status
         query_database()
@@ -95,21 +96,21 @@ if selected == "SQL Server":
 
 if selected == "PostgreSQL":
     st.subheader('PostgreSQL database')
-    Db_Host, DBpassword, DBuser, Db_name = conn_params()
+    server_host, server_port, DBpassword, DB_username, database_name = conn_params()
 
     # Add a button to connect to the database
     st.button("Connect", on_click=click_button)
 
     if st.session_state.clicked:
-        st.write(f"Connecting to {Db_Host} as {DBuser}...")
+        st.write(f"Connecting to {server_host} as {DB_username}...")
 
         # if True:    # Check the connection status
-        vn.connect_to_postgres(host=Db_Host, dbname=Db_name, password=DBpassword, user=DBuser, port=5432)
+        vn.connect_to_postgres(host=server_host, dbname=database_name, password=DBpassword, user=DB_username, port=server_port)
         st.success("Connection is successful!")
         
         query_database()
     else:
-        st.error(f"Connection to {Db_name} failed!!")
+        st.error(f"Connection to {database_name} failed!!")
 
 
 
