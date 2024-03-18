@@ -24,11 +24,11 @@ def click_button():
 
 
 def conn_params():
-    server_host = st.text_input("Hostname", placeholder="localhost")
-    server_port = st.number_input("Port", min_value=0, max_value = 65535, placeholder="1234")
+    server_host = st.text_input("Hostname", placeholder="Enter domain url or IPv4 Address")
+    server_port = st.number_input("Port", min_value=0, max_value = 65535)
     database_name = st.text_input("Enter Database Name", placeholder= "DataBase name")
     DB_username = st.text_input("Enter username", placeholder= "Username")
-    password = st.text_input("Enter Password", type= "Password")
+    password = st.text_input("Enter Password", type= "password")
 
     return server_host, DBpassword, DB_username, database_name, server_port
 
